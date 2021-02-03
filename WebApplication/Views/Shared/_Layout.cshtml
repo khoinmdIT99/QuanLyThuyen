@@ -1,0 +1,101 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - sPorts</title>
+    @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />*@
+    <link rel="stylesheet" href="~/lib/fontawesome-free-5.15.1-web/css/all.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap-cosmo.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/lib/leaflet/leaflet.min.css" />
+    @RenderSection("Styles", required: false)
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3 sticky-top">
+            <div class="container">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/logo.png" /></a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                    <partial name="_LoginPartial" />
+                    <ul class="navbar-nav flex-grow-1">
+                        @{
+                            // Grab the current logged in user, which will either be anon or logged in user
+                            System.Security.Claims.ClaimsPrincipal currentUser = this.User;
+
+                            // If the user is a boat owner, the navbar will contain the booking process option and the shopping cart
+                            if (currentUser.IsInRole("BoatOwner"))
+                            {
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link text-dark dropdown-toggle" href="#" id="navbarDropdownBoatOwner" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-ship"></i> Boat Owner
+                                    </a>
+
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdownBoatOwner">
+                                        <a class="nav-link text-dark dropdown-item" asp-area="" asp-controller="Boat" asp-action="Index"><i class="fas fa-ship"></i> Boats</a>
+                                        <a class="nav-link text-dark dropdown-item" asp-area="" asp-controller="BookingFlow" asp-action="Index"><i class="fas fa-shopping-basket"></i> Book</a>
+                                        <a class="nav-link text-dark dropdown-item" asp-area="" asp-controller="BoatOwner" asp-action="MyBookings"><i class="fas fa-cart-arrow-down"></i> My bookings</a>
+                                        <a class="nav-link text-dark dropdown-item" asp-area="" asp-controller="BookingFlow" asp-action="ShoppingCart"><i class="fas fa-cart-plus"></i> Shopping Cart</a>
+                                    </div>
+                                </li>
+
+                            }
+
+                            // If the user is a marina owner, we should display navbar options for accessing his owned spots and marinas
+                            if (currentUser.IsInRole("MarinaOwner"))
+                            {
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link text-dark dropdown-toggle" href="#" id="navbarDropdownMarinaOwner" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-anchor"></i> Marina Owner
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMarinaOwner">
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="Spot" asp-action="Index"><i class="fas fa-map-marker-alt"></i> Spots</a>
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="Marina" asp-action="Index"><i class="fas fa-anchor"></i> Marinas</a>
+                                    </div>
+                                </li>
+                            }
+
+                            // If the user is a manager, he should be able to see navbar options of managing boat and marina owners
+                            if (currentUser.IsInRole("Manager"))
+                            {
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link text-dark dropdown-toggle" href="#" id="navbarDropdownBoatOwner" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-users"></i> Manage
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdownBoatOwner">
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="BoatOwner" asp-action="Index"><i class="fas fa-user"></i> Boat Owners</a>
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="MarinaOwner" asp-action="Index"><i class="fas fa-user"></i> Marina Owners</a>
+                                    </div>
+                                </li>
+                            }
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="footer text-muted">
+        <div class="container">
+            &copy; 2020 - sPorts - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script>if (typeof module === 'object') { window.module = module; module = undefined; }</script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    @*<script>window.$ = window.jQuery = require('jquery');</script>*@
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js"></script>
+    @RenderSection("Scripts", required: false)
+    <script>if (window.module) module = window.module;</script>
+</body>
+</html>
